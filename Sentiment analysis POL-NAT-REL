@@ -1,12 +1,12 @@
-txtfile=open("C:/Users/No Name/OneDrive/Desktop/Projects/Ljotic.txt", "r", encoding="utf_8")
-datazero=txtfile.read()
-data=datazero.casefold()
-data1=data.replace(',', '')
-data2=data1.replace('.', '\n')
-data3=data2.replace(':', '')
-data4=data3.replace("'", '')
-data5=data4.replace('?', '')
-data6=data5.replace('!', '')
-#print(data6)
-dataList=data6.split()
-text_array = [line.split() for line in dataList.splitlines()]
+<<<<<<< HEAD
+txtfile = open("C:/Users/No Name/OneDrive/Desktop/Random.txt", "r", encoding="utf_8")
+datazero = txtfile.read()
+data = datazero.casefold()
+data1 = data.replace(',', '')
+data2 = data1.replace('.', '\n')
+data3 = data2.replace(':', '')
+data4 = data3.replace("'", '')
+data5 = data4.replace('?', '')
+data6 = data5.replace('!', '')
+
+txt_array = [line.split() for line in data6.splitlines()]
