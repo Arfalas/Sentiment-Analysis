@@ -10,3 +10,10 @@ data5 = data4.replace('?', '')
 data6 = data5.replace('!', '')
 #the next line makes separate lists from individual sentences in the string
 txt_array = [line.split() for line in data6.splitlines()]
+
+'''
+ I could make list matrixes to include several sentences/lists as a specific article. Nested lists would therefore be a whole article.
+l1 = [a, b, c]
+l2 = [d, e, f]
+l12 = [l1,l2]
+'''
