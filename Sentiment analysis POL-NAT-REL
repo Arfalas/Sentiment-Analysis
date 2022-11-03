@@ -17,3 +17,5 @@ l1 = [a, b, c]
 l2 = [d, e, f]
 l12 = [l1,l2]
 '''
+a = ['this', 'is', 'a', 'random', 'list']
+mydict = dict.fromkeys(a,0)
