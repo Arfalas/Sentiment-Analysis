@@ -2,23 +2,40 @@
 txtfile = open("C:/Users/No Name/OneDrive/Desktop/Random.txt", "r", encoding="utf_8")
 datazero = txtfile.read()
 data = datazero.casefold()
-def remove_punctuation(self):
+
+from string import digits
+
+def remove_numbers_punctuation(self):
     data1 = self.replace(',', '')
-    data2 = data1.replace('.', '\n')
+    data2 = data1.replace('.', '')
     data3 = data2.replace(':', '')
     data4 = data3.replace("'", '')
     data5 = data4.replace('?', '')
     data6 = data5.replace('!', '')
     data7 = data6.replace('"', '')
     data8 = data7.replace('-', '')
+    data9 = data8.replace('(', '')
+    data10 = data9.replace(')', '')
+    remove_number = str.maketrans('', '', digits)
+    numberless_string = data10.translate(remove_number)
+    text_List = numberless_string.split()
+    return text_List
 
-from string import digits
+remove_numbers_punctuation(data)
 
-def remove_numbers(self):
-    uploaded_string = self
-    numberless_string = uploaded_string.translate(None, digits)
+def Remove_words(list1, stop_words):
+    for word in list(list1):
+        if word in stop_words:
+            list1.remove(word)
+    return list1
+stop_word_str=open('C:/Users/No Name/OneDrive/Desktop/Projects/Stop Words BCS Final.txt', 'r', encoding='utf_8')
+stop_word=stop_word_str.read()
+stop_wordList=stop_word.split()
+#print(stop_wordList)
+pure_txt=Remove_words(remove_numbers_punctuation(data), stop_wordList)
+print(pure_txt)
 
-
+#The final result is a list without punctuation, numbers and stop-words.
 
 #the next line makes separate lists from individual sentences in the string
 #txt_array = [line.split() for line in remove_punctuation(data).splitlines()]
@@ -29,5 +46,4 @@ l1 = [a, b, c]
 l2 = [d, e, f]
 l12 = [l1,l2]
 '''
-a = ['this', 'is', 'a', 'random', 'list']
-mydict = dict.fromkeys(a,0)
+
