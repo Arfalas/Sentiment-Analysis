@@ -2,14 +2,26 @@
 txtfile = open("C:/Users/No Name/OneDrive/Desktop/Random.txt", "r", encoding="utf_8")
 datazero = txtfile.read()
 data = datazero.casefold()
-data1 = data.replace(',', '')
-data2 = data1.replace('.', '\n')
-data3 = data2.replace(':', '')
-data4 = data3.replace("'", '')
-data5 = data4.replace('?', '')
-data6 = data5.replace('!', '')
+def remove_punctuation(self):
+    data1 = self.replace(',', '')
+    data2 = data1.replace('.', '\n')
+    data3 = data2.replace(':', '')
+    data4 = data3.replace("'", '')
+    data5 = data4.replace('?', '')
+    data6 = data5.replace('!', '')
+    data7 = data6.replace('"', '')
+    data8 = data7.replace('-', '')
+
+from string import digits
+
+def remove_numbers(self):
+    uploaded_string = self
+    numberless_string = uploaded_string.translate(None, digits)
+
+
+
 #the next line makes separate lists from individual sentences in the string
-txt_array = [line.split() for line in data6.splitlines()]
+#txt_array = [line.split() for line in remove_punctuation(data).splitlines()]
 
 '''
  I could make list matrixes to include several sentences/lists as a specific article. Nested lists would therefore be a whole article.
