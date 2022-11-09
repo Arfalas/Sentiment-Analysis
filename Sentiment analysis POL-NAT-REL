@@ -46,4 +46,15 @@ l1 = [a, b, c]
 l2 = [d, e, f]
 l12 = [l1,l2]
 '''
+# the following code calculates the median value of all dictionary elements (it calculates only the values)
+'''test_dict = {"I" : 0, "love" : 1, "and" : 0, "adore" : 1, "cookies" : 0}
+ 
+print("The original dictionary is : " + str(test_dict))
+ 
+# calculates the median velue of the dictionary 
+res = sum(test_dict.values()) / len(test_dict)
 
+if res > 0: 
+    print('The sentiment is positive')
+else: 
+    print('The sentiment is negative')'''
