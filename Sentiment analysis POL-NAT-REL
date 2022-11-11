@@ -75,4 +75,4 @@ def changeValues(self):
             if key == 'mare':
                 self[key] = 1
     print(self)
-
+changeValues(sent_analysis)
