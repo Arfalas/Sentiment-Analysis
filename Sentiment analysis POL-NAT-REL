@@ -86,3 +86,4 @@ datazero=txtfile.read()
 dictList = datazero.split()
 makingDict = {values: 1 for values in dictList}
 print(makingDict)
+#test
