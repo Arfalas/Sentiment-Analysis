@@ -77,6 +77,7 @@ def changeValues(self):
     print(self)
 changeValues(sent_analysis)
 
+#make a dict from a list
 txtfile=open("C:/Users/No Name/OneDrive/Desktop/Projects/ztesting.txt", "r", encoding="utf_8")
 datazero=txtfile.read()
 dictList = datazero.split()
