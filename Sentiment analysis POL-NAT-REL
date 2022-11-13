@@ -16,6 +16,7 @@ def remove_numbers_punctuation(self):
     data8 = data7.replace('-', '')
     data9 = data8.replace('(', '')
     data10 = data9.replace(')', '')
+    #the next line removes all digits from a string
     remove_number = str.maketrans('', '', digits)
     numberless_string = data10.translate(remove_number)
     text_List = numberless_string.split()
@@ -37,7 +38,7 @@ print(pure_txt)
 
 #The final result is a list without punctuation, numbers and stop-words.
 
-#the next line makes separate lists from individual sentences in the string
+#the next line (42) makes separate lists from individual sentences in the string
 #txt_array = [line.split() for line in remove_punctuation(data).splitlines()]
 
 '''
