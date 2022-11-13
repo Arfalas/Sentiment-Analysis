@@ -7,7 +7,7 @@ from string import digits
 
 def remove_numbers_punctuation(self):
     data1 = self.replace(',', '')
-    data2 = data1.replace('.', '')
+    data2 = data1.replace('.', '') #entering /n here to replace every stop in the string will make it easier to make nested lists afterwards
     data3 = data2.replace(':', '')
     data4 = data3.replace("'", '')
     data5 = data4.replace('?', '')
@@ -59,7 +59,9 @@ if res > 0:
 else: 
     print('The sentiment is negative')'''
 
-
+#The next block will probably be redundant after the block#12
+#The next block changes specified dictionary values in a for loop
+'''
 my_list = ['Communists', 'are', 'an', 'evil', 'force', 'that', 'needs', 'to', 'be', 'destroyed']
 sent_analysis = {values: 0 for values in my_list}
 def changeValues(self):
@@ -76,3 +78,10 @@ def changeValues(self):
                 self[key] = 1
     print(self)
 changeValues(sent_analysis)
+'''
+# Block#12: opening a txt file and converting it in to a list, then dictionary, and assigning values. 
+txtfile=open("C:/Users/No Name/OneDrive/Desktop/Projects/ztesting.txt", "r", encoding="utf_8")
+datazero=txtfile.read()
+dictList = datazero.split()
+makingDict = {values: 1 for values in dictList}
+print(makingDict)
