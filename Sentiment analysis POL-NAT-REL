@@ -83,3 +83,16 @@ datazero=txtfile.read()
 dictList = datazero.split()
 makingDict = {values: 1 for values in dictList}
 print(makingDict)
+
+
+#extracting a PDF 
+
+from pypdf import PdfReader
+
+reader = PdfReader('example.pdf')
+
+
+for i in range(0, 6):
+    page = reader.pages[i]
+    final = page.extract_text()
+    print(final)
