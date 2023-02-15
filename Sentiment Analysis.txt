@@ -1,0 +1,28 @@
+This program aims to analyze a number of newspaper articles and find:
+1.	Those articles that mention certain ethnicities 
+2.	Further analyze for elements of stereotypes or conspiracy theories about said ethnicities
+3.	It should show the number of texts with present elements by year
+4.	It should show the percentage of texts that contain said elements
+5.	It should print those articles with present elements highlighted 
+
+The program should:
+1.	Open a .txt file as a string
+2.	Make lists of separate articles, divided by a year and an ID number*
+3.	Stop-words, numbers and punctuation should be removed from the lists
+4.	Lists should be transferred to dictionaries with the default value of 0
+5.	Dictionary elements should be updated by a vectorized bag-of-words with the value 1
+6.	The menial number should indicate the presence of elements for detecting consp. Theory
+
+
+
+*Since numbers will be removed from the list, a new value will be created for identifying texts:
+A – 1         For example: 193301 is year 1933, text no. 01, and it will be written AICCJA
+B – 2 
+C – 3 
+D – 4 
+E – 5 
+F – 6 
+G – 7 
+H – 8 
+I – 9 
+J – 0 
