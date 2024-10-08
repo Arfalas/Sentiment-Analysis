@@ -1,0 +1,32 @@
+from transformers import BertTokenizer, BertForSequenceClassification
+import torch
+
+def predict(text, model, tokenizer):
+    encoding = tokenizer.encode_plus(
+        text,
+        add_special_tokens=True,
+        max_length=128,
+        return_token_type_ids=False,
+        padding='max_length',
+        return_attention_mask=True,
+        return_tensors='pt',
+    )
+
+    input_ids = encoding['input_ids']
+    attention_mask = encoding['attention_mask']
+
+    output = model(input_ids, attention_mask=attention_mask)
+    logits = output.logits
+    prediction = torch.argmax(logits, dim=1).item()
+
+    labels = {0: 'No Antisemitism', 1: 'Subtle Antisemitism', 2: 'Explicit Antisemitism'}
+    return labels[prediction]
+
+# Load trained model
+model = BertForSequenceClassification.from_pretrained('./models/bert_antisemitism_model')
+tokenizer = BertTokenizer.from_pretrained('./models/bert_antisemitism_model')
+
+# Test the model on a new text
+text = "There is a Jewish plot to take over the World."
+prediction = predict(text, model, tokenizer)
+print(f'Prediction: {prediction}')
