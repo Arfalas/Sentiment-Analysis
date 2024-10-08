@@ -1,98 +1,117 @@
 
-txtfile = open("C:/Users/No Name/OneDrive/Desktop/Random.txt", "r", encoding="utf_8")
-datazero = txtfile.read()
-data = datazero.casefold()
+import torch
+import pandas as pd
+import numpy as np
+from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import Trainer, TrainingArguments
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from torch.utils.data import Dataset
 
-from string import digits
+# Custom Dataset Class for our Data
+class NewspaperDataset(Dataset):
+    def __init__(self, texts, labels, tokenizer, max_len):
+        self.texts = texts
+        self.labels = labels
+        self.tokenizer = tokenizer
+        self.max_len = max_len
 
-def remove_numbers_punctuation(self):
-    data1 = self.replace(',', '')
-    data2 = data1.replace('.', '')
-    data3 = data2.replace(':', '')
-    data4 = data3.replace("'", '')
-    data5 = data4.replace('?', '')
-    data6 = data5.replace('!', '')
-    data7 = data6.replace('"', '')
-    data8 = data7.replace('-', '')
-    data9 = data8.replace('(', '')
-    data10 = data9.replace(')', '')
-    remove_number = str.maketrans('', '', digits)
-    numberless_string = data10.translate(remove_number)
-    text_List = numberless_string.split()
-    return text_List
+    def __len__(self):
+        return len(self.texts)
 
-remove_numbers_punctuation(data)
+    def __getitem__(self, idx):
+        text = self.texts[idx]
+        label = self.labels[idx]
+        encoding = self.tokenizer.encode_plus(
+            text,
+            add_special_tokens=True,
+            truncation=True,
+            max_length=self.max_len,
+            return_token_type_ids=False,
+            padding='max_length',
+            return_attention_mask=True,
+            return_tensors='pt',
+        )
+        return {
+            'input_ids': encoding['input_ids'].flatten(),
+            'attention_mask': encoding['attention_mask'].flatten(),
+            'labels': torch.tensor(label, dtype=torch.long)
+        }
 
-def Remove_words(list1, stop_words):
-    for word in list(list1):
-        if word in stop_words:
-            list1.remove(word)
-    return list1
-stop_word_str=open('C:/Users/No Name/OneDrive/Desktop/Projects/Stop Words BCS Final.txt', 'r', encoding='utf_8')
-stop_word=stop_word_str.read()
-stop_wordList=stop_word.split()
-#print(stop_wordList)
-pure_txt=Remove_words(remove_numbers_punctuation(data), stop_wordList)
-print(pure_txt)
+# Load and Preprocess Data
+def load_data(csv_file, tokenizer, max_len, test_size=0.2):
+    df = pd.read_csv(csv_file)
+    texts = df['text'].tolist()
+    labels = df['label'].tolist()
 
-#The final result is a list without punctuation, numbers and stop-words.
+    # Train-test split
+    X_train, X_val, y_train, y_val = train_test_split(texts, labels, test_size=test_size, random_state=42)
+    
+    train_dataset = NewspaperDataset(X_train, y_train, tokenizer, max_len)
+    val_dataset = NewspaperDataset(X_val, y_val, tokenizer, max_len)
 
-#the next line makes separate lists from individual sentences in the string
-#txt_array = [line.split() for line in remove_punctuation(data).splitlines()]
+    return train_dataset, val_dataset
 
-'''
- I could make list matrixes to include several sentences/lists as a specific article. Nested lists would therefore be a whole article.
-l1 = [a, b, c]
-l2 = [d, e, f]
-l12 = [l1,l2]
-'''
-# the following code calculates the median value of all dictionary elements (it calculates only the values)
-'''test_dict = {"I" : 0, "love" : 1, "and" : 0, "adore" : 1, "cookies" : 0}
- 
-print("The original dictionary is : " + str(test_dict))
- 
-# calculates the median velue of the dictionary 
-res = sum(test_dict.values()) / len(test_dict)
+# Metrics for Evaluation
+def compute_metrics(p):
+    preds = np.argmax(p.predictions, axis=1)
+    precision, recall, f1, _ = precision_recall_fscore_support(p.label_ids, preds, average='weighted')
+    acc = accuracy_score(p.label_ids, preds)
+    return {
+        'accuracy': acc,
+        'f1': f1,
+        'precision': precision,
+        'recall': recall
+    }
 
-if res > 0: 
-    print('The sentiment is positive')
-else: 
-    print('The sentiment is negative')'''
+# Main function
+def train_model():
+    # Configuration
+    MODEL_NAME = 'bert-base-uncased'
+    MAX_LEN = 128
+    BATCH_SIZE = 16
+    EPOCHS = 3
+    LEARNING_RATE = 2e-5
+    CSV_FILE = 'data/historical_newspapers.csv'
 
+    # Load BERT tokenizer
+    tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
 
-my_list = ['Communists', 'are', 'an', 'evil', 'force', 'that', 'needs', 'to', 'be', 'destroyed']
-sent_analysis = {values: 0 for values in my_list}
-def changeValues(self):
-    for key, value in self.items():
-        if value == 0:
-            if key == 'evil':
-                self[key] = 1
-        if value == 0:
-            if key == 'destroyed':
-                self[key] = 1
-# if a value from the loop is not present in the dict then the loop will not change or add dict elements
-        if value == 0:
-            if key == 'mare':
-                self[key] = 1
-    print(self)
-changeValues(sent_analysis)
+    # Load Data
+    train_dataset, val_dataset = load_data(CSV_FILE, tokenizer, MAX_LEN)
 
-#make a dict from a list
-txtfile=open("C:/Users/No Name/OneDrive/Desktop/Projects/ztesting.txt", "r", encoding="utf_8")
-datazero=txtfile.read()
-dictList = datazero.split()
-makingDict = {values: 1 for values in dictList}
-print(makingDict)
+    # Load BERT model for Sequence Classification
+    model = BertForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3)
 
+    # Training Arguments
+    training_args = TrainingArguments(
+        output_dir='./models/bert_antisemitism_model',
+        num_train_epochs=EPOCHS,
+        per_device_train_batch_size=BATCH_SIZE,
+        per_device_eval_batch_size=BATCH_SIZE,
+        evaluation_strategy='epoch',
+        save_strategy='epoch',
+        logging_dir='./logs',
+        learning_rate=LEARNING_RATE,
+        load_best_model_at_end=True,
+        logging_steps=100,
+    )
 
-#extracting a PDF 
+    # Trainer
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=train_dataset,
+        eval_dataset=val_dataset,
+        compute_metrics=compute_metrics,
+    )
 
-from pypdf import PdfReader
+    # Train model
+    trainer.train()
 
-reader = PdfReader('example.pdf')
+    # Save model
+    model.save_pretrained('./models/bert_antisemitism_model')
+    tokenizer.save_pretrained('./models/bert_antisemitism_model')
 
-
-for i in range(0, 6):
-    page = reader.pages[i]
-    final = page.extract_text()
-    print(final)
+if __name__ == '__main__':
+    train_model()
